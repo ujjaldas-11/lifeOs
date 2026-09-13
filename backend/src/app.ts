@@ -1,4 +1,5 @@
 import express from "express";
+import taskRoutes from "./routes/task.routes.js"
 
 const app = express();
 
@@ -13,5 +14,7 @@ app.get("/", (_req, res) => {
     message: "LifeOS API is running 🚀"
   });
 });
+
+app.use("/api/tasks", taskRoutes);
 
 export default app;
