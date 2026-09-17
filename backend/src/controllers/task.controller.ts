@@ -7,15 +7,15 @@ import {
   deleteTask,
 } from "../services/task.service.js";
 
-export const getTasks = (_req: Request, res: Response) => {
-  const tasks = getAllTasks();
+export const getTasks = async(_req: Request, res: Response) => {
+  const tasks = await getAllTasks();
   res.status(200).json({
     success: true,
     data: tasks,
   });
 };
 
-export const getTask = (req: Request, res: Response) => {
+export const getTask = async(req: Request, res: Response) => {
   const id = Number(req.params.id);
 
   if (Number.isNaN(id)) {
@@ -25,7 +25,7 @@ export const getTask = (req: Request, res: Response) => {
     });
   }
 
-  const task = getTaskById(id);
+  const task = await getTaskById(id);
 
   if (!task) {
     res.status(404).json({
@@ -41,7 +41,7 @@ export const getTask = (req: Request, res: Response) => {
   });
 };
 
-export const addTask = (req: Request, res: Response) => {
+export const addTask = async (req: Request, res: Response) => {
   const { title, description, priority } = req.body;
 
   if (!title) {
@@ -52,7 +52,7 @@ export const addTask = (req: Request, res: Response) => {
     return;
   }
 
-  const task = createTask(title, description, priority);
+  const task = await createTask(title, description, priority);
 
   const validPriorities = ["low", "medium", "high"];
 
@@ -69,7 +69,7 @@ export const addTask = (req: Request, res: Response) => {
   });
 };
 
-export const updateTask = (req: Request, res: Response) => {
+export const updateTask = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
 
   if (Number.isNaN(id)) {
@@ -81,7 +81,7 @@ export const updateTask = (req: Request, res: Response) => {
 
   const updates = req.body;
 
-  const updatedTask = updateTaskService(id, updates);
+  const updatedTask = await updateTaskService(id, updates);
 
   if (!updatedTask) {
     return res.status(404).json({
@@ -96,7 +96,7 @@ export const updateTask = (req: Request, res: Response) => {
   });
 };
 
-export const removeTask = (req: Request, res: Response) => {
+export const removeTask = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
 
   if (Number.isNaN(id)) {
@@ -106,7 +106,7 @@ export const removeTask = (req: Request, res: Response) => {
     });
   }
 
-  const deleted = deleteTask(id);
+  const deleted = await deleteTask(id);
 
   if (!deleted) {
     res.status(404).json({

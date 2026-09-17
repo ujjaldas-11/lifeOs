@@ -1,61 +1,93 @@
-type Task = {
-    id: number;
-    title: string;
-    description?: string | undefined;
-    priority: "low" | "medium" | "high";
-    status: "pending" | "completed";
+import { prisma } from "../lib/prisma.js";
+import type { TaskPriority, TaskStatus } from "../models/model.task.js";
+
+export const getAllTasks = async () => {
+  return await prisma.task.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 };
 
-let tasks: Task[] = [];
-
-export const getAllTasks = () => {
-    return tasks;
-}
-
-export const getTaskById = (id: number) => {
-    return tasks.find((task)=> task.id === id);
+export const getTaskById = async (id: number) => {
+  return await prisma.task.findUnique({
+    where: {
+      id,
+    },
+  });
 };
 
-export const createTask = (
-    title: string,
-    description: string | undefined,
-    priority: Task["priority"]    
+export const createTask = async (
+  title: string,
+  description: string | undefined,
+  priority: TaskPriority
 ) => {
-    const task: Task = {
-        id: Date.now(),
-        title,
-        description,
-        priority,
-        status: "pending",
-    };
-    tasks.push(task);
-
-    return task;
+  return await prisma.task.create({
+    data: {
+      title,
+      description: description ?? null,
+      priority: priority.toUpperCase() as "LOW" | "MEDIUM" | "HIGH",
+    },
+  });
 };
 
+export const updateTaskService = async (
+  id: number,
+  updates: {
+    title?: string;
+    description?: string;
+    priority?: TaskPriority;
+    status?: TaskStatus;
+  },
+) => {
+  const data: {
+    title?: string;
+    description?: string;
+    priority?: "LOW" | "MEDIUM" | "HIGH";
+    status?: "PENDING" | "COMPLETED";
+  } = {};
 
-export const updateTaskService = (id: number, updates: Partial<Omit<Task, "id">>) => {
-    const task = tasks.find((task) => task.id === id);
+  if(updates.title !== undefined) {
+    data.title = updates.title;
+  }
+  
+  if(updates.description !== undefined) {
+    data.description = updates.description;
+  }
 
-    if(!task) {
-        return undefined;
-    }
+   if (updates.priority !== undefined) {
+    data.priority = updates.priority.toUpperCase() as
+      | "LOW"
+      | "MEDIUM"
+      | "HIGH";
+  }
 
-    Object.assign(task, updates);
+  if (updates.status !== undefined) {
+    data.status = updates.status.toUpperCase() as
+      | "PENDING"
+      | "COMPLETED";
+  }
 
-    return task;
-}
 
+  return await prisma.task.update({
+    where: {
+        id,
+    },
+    data,
+  });
 
-export const deleteTask = (id: number) => {
-    const index = tasks.findIndex((task) => task.id === id);
+};
 
-    if(index === -1) {
+export const deleteTask = async(id: number) => {
+    try{
+        await prisma.task.delete({
+            where: {
+                id,
+            },
+        });
+
+        return true;
+    } catch {
         return false;
     }
-
-    tasks.splice(index, 1);
-
-    return true;
 };
-
