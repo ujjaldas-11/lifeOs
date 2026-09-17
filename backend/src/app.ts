@@ -15,6 +15,8 @@ app.get("/", (_req, res) => {
   });
 });
 
+// app.use("/api/tasks", taskRoutes);
+
 app.use("/api/tasks", taskRoutes);
 
 export default app;

@@ -4,7 +4,6 @@ type Task = {
     description?: string | undefined;
     priority: "low" | "medium" | "high";
     status: "pending" | "completed";
-
 };
 
 let tasks: Task[] = [];
@@ -35,7 +34,20 @@ export const createTask = (
 };
 
 
-export const deletaTask = (id: number) => {
+export const updateTaskService = (id: number, updates: Partial<Omit<Task, "id">>) => {
+    const task = tasks.find((task) => task.id === id);
+
+    if(!task) {
+        return undefined;
+    }
+
+    Object.assign(task, updates);
+
+    return task;
+}
+
+
+export const deleteTask = (id: number) => {
     const index = tasks.findIndex((task) => task.id === id);
 
     if(index === -1) {

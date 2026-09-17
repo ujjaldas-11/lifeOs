@@ -1,65 +1,120 @@
-import {type Request,type Response } from "express";
-import {getAllTasks, getTaskById, createTask, deletaTask} from "../services/task.service.js";
+import { type Request, type Response } from "express";
+import {
+  getAllTasks,
+  getTaskById,
+  createTask,
+  updateTaskService,
+  deleteTask,
+} from "../services/task.service.js";
 
 export const getTasks = (_req: Request, res: Response) => {
-    const tasks = getAllTasks();
-    res.status(200).json({
-        success: true,
-        data: tasks,
-    });
+  const tasks = getAllTasks();
+  res.status(200).json({
+    success: true,
+    data: tasks,
+  });
 };
 
-export const getTask = (req: Request, res:Response) => {
-    const id = Number(req.params.id);
-    const task = getTaskById(id);
+export const getTask = (req: Request, res: Response) => {
+  const id = Number(req.params.id);
 
-    if(!task) {
-        res.status(404).json({
-            success: false,
-            message: "Task not found",
-        });
-        return;
-    }
-
-    res.status(200).json({
-        success: true,
-        data: task,
+  if (Number.isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid task ID",
     });
-}
+  }
 
-export const addTask = (req: Request, res:Response) => {
-    const {title, description, priority} = req.body;
+  const task = getTaskById(id);
 
-    if(!title) {
-        res.status(400).json({
-            success: false,
-            message: "Title is required",
-        })
-        return;
-    }
-
-    const task = createTask(title, description, priority ?? "medium");
-
-    res.status(201).json({
-        success: true,
-        data: task,
+  if (!task) {
+    res.status(404).json({
+      success: false,
+      message: "Task not found",
     });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    data: task,
+  });
+};
+
+export const addTask = (req: Request, res: Response) => {
+  const { title, description, priority } = req.body;
+
+  if (!title) {
+    res.status(400).json({
+      success: false,
+      message: "Title is required",
+    });
+    return;
+  }
+
+  const task = createTask(title, description, priority);
+
+  const validPriorities = ["low", "medium", "high"];
+
+  if (priority && !validPriorities.includes(priority)) {
+    return res.status(400).json({
+      success: false,
+      message: "Priority must be low, medium, or high",
+    });
+  }
+
+  res.status(201).json({
+    success: true,
+    data: task,
+  });
+};
+
+export const updateTask = (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid task ID",
+    });
+  }
+
+  const updates = req.body;
+
+  const updatedTask = updateTaskService(id, updates);
+
+  if (!updatedTask) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: updatedTask,
+  });
 };
 
 export const removeTask = (req: Request, res: Response) => {
-    const id = Number(req.params.id);
+  const id = Number(req.params.id);
 
-    const deleted = deletaTask(id);
+  if (Number.isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid task ID",
+    });
+  }
 
-    if(!deleted) {
-        res.status(404).json({
-            success: false,
-            message: "task not found",
-        });
-        return;
-    }
+  const deleted = deleteTask(id);
 
-    res.status(204).send();
-}
+  if (!deleted) {
+    res.status(404).json({
+      success: false,
+      message: "task not found",
+    });
+    return;
+  }
 
-
+  return res.status(204).send();
+};
