@@ -7,6 +7,19 @@ datasource db {
   provider = "postgresql"
 }
 
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+
+  tasks        Task[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model Task {
   id          Int      @id @default(autoincrement())
   title       String
@@ -15,6 +28,10 @@ model Task {
   status      Status   @default(PENDING)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Priority {
@@ -27,3 +44,7 @@ enum Status {
   PENDING
   COMPLETED
 }
+
+
+
+
