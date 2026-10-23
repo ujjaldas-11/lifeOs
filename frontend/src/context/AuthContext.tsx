@@ -10,6 +10,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateUser: (updatedUser: User) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,6 +25,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return localStorage.getItem("lifeos_token");
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const refreshUser = async () => {
+    try {
+      const currentUser = await getCurrentUserApi();
+      setUser(currentUser);
+      localStorage.setItem("lifeos_user", JSON.stringify(currentUser));
+    } catch (err) {
+      console.warn("Failed to refresh user:", err);
+    }
+  };
 
   useEffect(() => {
     async function verifyAuth() {
@@ -75,6 +87,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser);
+    localStorage.setItem("lifeos_user", JSON.stringify(updatedUser));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -85,6 +102,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        updateUser,
+        refreshUser,
       }}
     >
       {children}

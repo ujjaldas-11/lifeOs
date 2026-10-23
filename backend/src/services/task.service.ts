@@ -6,10 +6,11 @@ export interface TaskFilterOptions {
   filter?: TaskFilterType | string | undefined;
   priority?: TaskPriority | string | undefined;
   search?: string | undefined;
+  projectId?: number | undefined;
 }
 
 export const getAllTasks = async (options: TaskFilterOptions = {}) => {
-  const { userId, filter = "all", priority, search } = options;
+  const { userId, filter = "all", priority, search, projectId } = options;
 
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -19,6 +20,10 @@ export const getAllTasks = async (options: TaskFilterOptions = {}) => {
 
   if (userId !== undefined) {
     whereClause.userId = userId;
+  }
+
+  if (projectId !== undefined) {
+    whereClause.projectId = projectId;
   }
 
   if (priority) {
@@ -60,12 +65,19 @@ export const getAllTasks = async (options: TaskFilterOptions = {}) => {
 
     case "all":
     default:
-      // No filter applied
       break;
   }
 
   return await prisma.task.findMany({
     where: whereClause,
+    include: {
+      project: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
     orderBy: [
       { completed: "asc" },
       { dueDate: "asc" },
@@ -82,6 +94,14 @@ export const getTaskById = async (id: number, userId?: number) => {
 
   return await prisma.task.findFirst({
     where: whereClause,
+    include: {
+      project: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
   });
 };
 
@@ -92,9 +112,12 @@ export const createTask = async (data: {
   dueDate?: Date | string | null | undefined;
   completed?: boolean | undefined;
   userId?: number | null | undefined;
+  projectId?: number | null | undefined;
+  kanbanColumn?: string | undefined;
 }) => {
   const normPriority = (data.priority?.toUpperCase() ?? "MEDIUM") as "LOW" | "MEDIUM" | "HIGH";
-  const isCompleted = data.completed ?? false;
+  const kanban = data.kanbanColumn ?? (data.completed ? "DONE" : "TODO");
+  const isCompleted = data.completed !== undefined ? data.completed : kanban === "DONE";
   const status: "PENDING" | "COMPLETED" = isCompleted ? "COMPLETED" : "PENDING";
   const dueDateVal = data.dueDate ? new Date(data.dueDate) : null;
 
@@ -106,7 +129,17 @@ export const createTask = async (data: {
       dueDate: dueDateVal,
       completed: isCompleted,
       status,
+      kanbanColumn: kanban,
       userId: data.userId ?? null,
+      projectId: data.projectId ?? null,
+    },
+    include: {
+      project: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 };
@@ -120,10 +153,11 @@ export const updateTaskService = async (
     dueDate?: Date | string | null | undefined;
     completed?: boolean | undefined;
     status?: TaskStatus | string | undefined;
+    projectId?: number | null | undefined;
+    kanbanColumn?: string | undefined;
   },
   userId?: number | undefined
 ) => {
-  // First verify task exists and belongs to user if specified
   const existingTask = await getTaskById(id, userId);
   if (!existingTask) {
     return null;
@@ -147,18 +181,51 @@ export const updateTaskService = async (
     data.dueDate = updates.dueDate ? new Date(updates.dueDate) : null;
   }
 
+  if (updates.projectId !== undefined) {
+    data.projectId = updates.projectId;
+  }
+
+  if (updates.kanbanColumn !== undefined) {
+    data.kanbanColumn = updates.kanbanColumn;
+    if (updates.kanbanColumn === "DONE" && updates.completed === undefined) {
+      data.completed = true;
+      data.status = "COMPLETED";
+    } else if (
+      (updates.kanbanColumn === "TODO" || updates.kanbanColumn === "IN_PROGRESS" || updates.kanbanColumn === "REVIEW") &&
+      updates.completed === undefined &&
+      existingTask.completed
+    ) {
+      data.completed = false;
+      data.status = "PENDING";
+    }
+  }
+
   if (updates.completed !== undefined) {
     data.completed = updates.completed;
     data.status = updates.completed ? "COMPLETED" : "PENDING";
+    if (updates.completed && updates.kanbanColumn === undefined) {
+      data.kanbanColumn = "DONE";
+    } else if (!updates.completed && existingTask.kanbanColumn === "DONE" && updates.kanbanColumn === undefined) {
+      data.kanbanColumn = "TODO";
+    }
   } else if (updates.status !== undefined) {
     const normStatus = updates.status.toUpperCase() as "PENDING" | "COMPLETED";
     data.status = normStatus;
     data.completed = normStatus === "COMPLETED";
+    if (normStatus === "COMPLETED") data.kanbanColumn = "DONE";
   }
 
   return await prisma.task.update({
     where: { id },
     data,
+    include: {
+      project: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
   });
 };
 

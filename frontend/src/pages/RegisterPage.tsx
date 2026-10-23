@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Terminal, Sparkles, ArrowRight } from "lucide-react";
+import { Terminal, ArrowRight, Sparkles } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -19,14 +19,8 @@ export function RegisterPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (!name.trim()) {
-      setError("Please provide your name");
-      return;
-    }
-
-    if (!email.trim() || !email.includes("@")) {
-      setError("Please enter a valid email address");
+    if (!name || !email || !password) {
+      setError("Please complete all required fields");
       return;
     }
 
@@ -43,7 +37,7 @@ export function RegisterPage() {
     try {
       setIsLoading(true);
       setError(null);
-      await register(name.trim(), email.trim(), password);
+      await register(name, email, password);
       navigate("/", { replace: true });
     } catch (err: any) {
       setError(err.message || "Failed to create account. Please try again.");
@@ -53,35 +47,32 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-[#0d0f14] p-4">
+      <div className="w-full max-w-md">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-xl shadow-blue-500/25 text-white mb-4">
-            <Terminal className="h-6 w-6" />
+          <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-[#161922] border border-[#222736] text-blue-400 mb-3.5">
+            <Terminal className="h-5 w-5" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Create your LifeOS account</h1>
-          <p className="text-xs text-slate-400 mt-1.5">
-            Initialize your personal workspace in seconds
+          <h1 className="text-xl font-semibold tracking-tight text-[#e6edf3]">Create your LifeOS account</h1>
+          <p className="text-xs text-[#8b949e] mt-1">
+            Initialize your personal developer workspace in seconds
           </p>
         </div>
 
-        <Card className="border-slate-800 bg-slate-900/80 shadow-2xl backdrop-blur-xl">
-          <CardContent className="p-6 sm:p-8">
+        <Card className="border-[#222736] bg-[#13161f]">
+          <CardContent className="p-6">
             {/* Auto-seeding info banner */}
-            <div className="mb-5 flex items-start gap-2.5 rounded-lg bg-blue-950/40 border border-blue-800/40 p-3 text-xs text-blue-300">
+            <div className="mb-4 flex items-start gap-2.5 rounded-md bg-[#152744] border border-[#1f4277] p-3 text-xs text-[#58a6ff]">
               <Sparkles className="h-4 w-4 shrink-0 mt-0.5 text-blue-400" />
               <span>
-                <strong>Developer Quickstart:</strong> 5 curated sample tasks across Today, Upcoming,
-                Overdue, and Completed will be seeded automatically for you!
+                <strong>Developer Quickstart:</strong> Sample projects, tasks, habits, and notes will be seeded automatically for you!
               </span>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="rounded-lg bg-red-950/60 border border-red-800/80 p-3 text-xs text-red-300 font-medium">
+                <div className="rounded-md bg-[#3c1e22] border border-[#67252b] p-3 text-xs text-[#f85149] font-medium">
                   {error}
                 </div>
               )}
@@ -98,7 +89,7 @@ export function RegisterPage() {
               <Input
                 label="Email Address *"
                 type="email"
-                placeholder="ada@example.com"
+                placeholder="developer@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -107,7 +98,8 @@ export function RegisterPage() {
               <Input
                 label="Password *"
                 type="password"
-                placeholder="At least 6 characters"
+                placeholder="••••••••"
+                helperText="Must be at least 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -116,26 +108,26 @@ export function RegisterPage() {
               <Input
                 label="Confirm Password *"
                 type="password"
-                placeholder="Repeat password"
+                placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
 
-              <Button type="submit" size="lg" className="w-full mt-2" isLoading={isLoading}>
-                <span>Register & Seed Workspace</span>
+              <Button type="submit" size="md" className="w-full mt-2" isLoading={isLoading}>
+                <span>Create LifeOS Account</span>
                 <ArrowRight className="h-4 w-4 ml-1.5" />
               </Button>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-slate-800/80 text-center">
-              <p className="text-xs text-slate-400">
-                Already registered?{" "}
+            <div className="mt-5 pt-5 border-t border-[#222736] text-center">
+              <p className="text-xs text-[#8b949e]">
+                Already have an account?{" "}
                 <Link
                   to="/login"
                   className="font-medium text-blue-400 hover:text-blue-300 hover:underline"
                 >
-                  Sign in here
+                  Sign in
                 </Link>
               </p>
             </div>

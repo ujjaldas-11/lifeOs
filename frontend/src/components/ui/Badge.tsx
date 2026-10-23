@@ -3,25 +3,37 @@ import { cn } from "../../lib/utils";
 import type { Priority } from "../../types/task";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "high" | "medium" | "low" | "today" | "upcoming" | "overdue" | "completed";
+  variant?:
+    | "default"
+    | "high"
+    | "medium"
+    | "low"
+    | "today"
+    | "upcoming"
+    | "overdue"
+    | "completed"
+    | "active"
+    | "on_hold";
 }
 
 export function Badge({ className, variant = "default", children, ...props }: BadgeProps) {
   const variantStyles = {
-    default: "bg-slate-800 text-slate-300 border-slate-700",
-    high: "bg-rose-950/60 text-rose-300 border-rose-800/60",
-    medium: "bg-amber-950/60 text-amber-300 border-amber-800/60",
-    low: "bg-emerald-950/60 text-emerald-300 border-emerald-800/60",
-    today: "bg-blue-950/60 text-blue-300 border-blue-800/60",
-    upcoming: "bg-indigo-950/60 text-indigo-300 border-indigo-800/60",
-    overdue: "bg-red-950/70 text-red-300 border-red-700/70",
-    completed: "bg-slate-800/80 text-slate-400 border-slate-700/60 line-through",
+    default: "bg-[#161922] text-[#8b949e] border-[#222736]",
+    high: "bg-[#3c1e22] text-[#f85149] border-[#67252b]",
+    medium: "bg-[#342c16] text-[#e3b341] border-[#59491a]",
+    low: "bg-[#162a1c] text-[#3fb950] border-[#224b2b]",
+    today: "bg-[#152744] text-[#58a6ff] border-[#1f4277]",
+    upcoming: "bg-[#241e3d] text-[#bc8cff] border-[#3f326a]",
+    overdue: "bg-[#3c1e22] text-[#f85149] border-[#67252b]",
+    completed: "bg-[#161922] text-[#8b949e] border-[#222736] line-through",
+    active: "bg-[#152744] text-[#58a6ff] border-[#1f4277]",
+    on_hold: "bg-[#342c16] text-[#e3b341] border-[#59491a]",
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border transition-colors",
+        "inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium border",
         variantStyles[variant],
         className
       )}

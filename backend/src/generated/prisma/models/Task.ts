@@ -29,11 +29,13 @@ export type AggregateTask = {
 export type TaskAvgAggregateOutputType = {
   id: number | null
   userId: number | null
+  projectId: number | null
 }
 
 export type TaskSumAggregateOutputType = {
   id: number | null
   userId: number | null
+  projectId: number | null
 }
 
 export type TaskMinAggregateOutputType = {
@@ -44,9 +46,11 @@ export type TaskMinAggregateOutputType = {
   dueDate: Date | null
   completed: boolean | null
   status: $Enums.Status | null
+  kanbanColumn: string | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: number | null
+  projectId: number | null
 }
 
 export type TaskMaxAggregateOutputType = {
@@ -57,9 +61,11 @@ export type TaskMaxAggregateOutputType = {
   dueDate: Date | null
   completed: boolean | null
   status: $Enums.Status | null
+  kanbanColumn: string | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: number | null
+  projectId: number | null
 }
 
 export type TaskCountAggregateOutputType = {
@@ -70,9 +76,11 @@ export type TaskCountAggregateOutputType = {
   dueDate: number
   completed: number
   status: number
+  kanbanColumn: number
   createdAt: number
   updatedAt: number
   userId: number
+  projectId: number
   _all: number
 }
 
@@ -80,11 +88,13 @@ export type TaskCountAggregateOutputType = {
 export type TaskAvgAggregateInputType = {
   id?: true
   userId?: true
+  projectId?: true
 }
 
 export type TaskSumAggregateInputType = {
   id?: true
   userId?: true
+  projectId?: true
 }
 
 export type TaskMinAggregateInputType = {
@@ -95,9 +105,11 @@ export type TaskMinAggregateInputType = {
   dueDate?: true
   completed?: true
   status?: true
+  kanbanColumn?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
+  projectId?: true
 }
 
 export type TaskMaxAggregateInputType = {
@@ -108,9 +120,11 @@ export type TaskMaxAggregateInputType = {
   dueDate?: true
   completed?: true
   status?: true
+  kanbanColumn?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
+  projectId?: true
 }
 
 export type TaskCountAggregateInputType = {
@@ -121,9 +135,11 @@ export type TaskCountAggregateInputType = {
   dueDate?: true
   completed?: true
   status?: true
+  kanbanColumn?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
+  projectId?: true
   _all?: true
 }
 
@@ -221,9 +237,11 @@ export type TaskGroupByOutputType = {
   dueDate: Date | null
   completed: boolean
   status: $Enums.Status
+  kanbanColumn: string
   createdAt: Date
   updatedAt: Date
   userId: number | null
+  projectId: number | null
   _count: TaskCountAggregateOutputType | null
   _avg: TaskAvgAggregateOutputType | null
   _sum: TaskSumAggregateOutputType | null
@@ -257,10 +275,13 @@ export type TaskWhereInput = {
   dueDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   completed?: Prisma.BoolFilter<"Task"> | boolean
   status?: Prisma.EnumStatusFilter<"Task"> | $Enums.Status
+  kanbanColumn?: Prisma.StringFilter<"Task"> | string
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.IntNullableFilter<"Task"> | number | null
+  projectId?: Prisma.IntNullableFilter<"Task"> | number | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }
 
 export type TaskOrderByWithRelationInput = {
@@ -271,10 +292,13 @@ export type TaskOrderByWithRelationInput = {
   dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   completed?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kanbanColumn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
 }
 
 export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -288,10 +312,13 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   dueDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   completed?: Prisma.BoolFilter<"Task"> | boolean
   status?: Prisma.EnumStatusFilter<"Task"> | $Enums.Status
+  kanbanColumn?: Prisma.StringFilter<"Task"> | string
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.IntNullableFilter<"Task"> | number | null
+  projectId?: Prisma.IntNullableFilter<"Task"> | number | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }, "id">
 
 export type TaskOrderByWithAggregationInput = {
@@ -302,9 +329,11 @@ export type TaskOrderByWithAggregationInput = {
   dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   completed?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kanbanColumn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TaskCountOrderByAggregateInput
   _avg?: Prisma.TaskAvgOrderByAggregateInput
   _max?: Prisma.TaskMaxOrderByAggregateInput
@@ -323,9 +352,11 @@ export type TaskScalarWhereWithAggregatesInput = {
   dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
   completed?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
   status?: Prisma.EnumStatusWithAggregatesFilter<"Task"> | $Enums.Status
+  kanbanColumn?: Prisma.StringWithAggregatesFilter<"Task"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
   userId?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
+  projectId?: Prisma.IntNullableWithAggregatesFilter<"Task"> | number | null
 }
 
 export type TaskCreateInput = {
@@ -335,9 +366,11 @@ export type TaskCreateInput = {
   dueDate?: Date | string | null
   completed?: boolean
   status?: $Enums.Status
+  kanbanColumn?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutTasksInput
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
 }
 
 export type TaskUncheckedCreateInput = {
@@ -348,9 +381,11 @@ export type TaskUncheckedCreateInput = {
   dueDate?: Date | string | null
   completed?: boolean
   status?: $Enums.Status
+  kanbanColumn?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   userId?: number | null
+  projectId?: number | null
 }
 
 export type TaskUpdateInput = {
@@ -360,9 +395,11 @@ export type TaskUpdateInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutTasksNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
 }
 
 export type TaskUncheckedUpdateInput = {
@@ -373,9 +410,11 @@ export type TaskUncheckedUpdateInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type TaskCreateManyInput = {
@@ -386,9 +425,11 @@ export type TaskCreateManyInput = {
   dueDate?: Date | string | null
   completed?: boolean
   status?: $Enums.Status
+  kanbanColumn?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   userId?: number | null
+  projectId?: number | null
 }
 
 export type TaskUpdateManyMutationInput = {
@@ -398,6 +439,7 @@ export type TaskUpdateManyMutationInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -410,9 +452,11 @@ export type TaskUncheckedUpdateManyInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type TaskListRelationFilter = {
@@ -433,14 +477,17 @@ export type TaskCountOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   completed?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kanbanColumn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
 }
 
 export type TaskAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
 }
 
 export type TaskMaxOrderByAggregateInput = {
@@ -451,9 +498,11 @@ export type TaskMaxOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   completed?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kanbanColumn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
 }
 
 export type TaskMinOrderByAggregateInput = {
@@ -464,14 +513,17 @@ export type TaskMinOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   completed?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kanbanColumn?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
 }
 
 export type TaskSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
 }
 
 export type TaskCreateNestedManyWithoutUserInput = {
@@ -516,8 +568,46 @@ export type TaskUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
+export type TaskCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+}
+
+export type TaskUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+}
+
+export type TaskUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput | Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput | Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutProjectInput | Prisma.TaskUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
+}
+
+export type TaskUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput> | Prisma.TaskCreateWithoutProjectInput[] | Prisma.TaskUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.TaskCreateOrConnectWithoutProjectInput | Prisma.TaskCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput | Prisma.TaskUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.TaskCreateManyProjectInputEnvelope
+  set?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  disconnect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  delete?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  connect?: Prisma.TaskWhereUniqueInput | Prisma.TaskWhereUniqueInput[]
+  update?: Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput | Prisma.TaskUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.TaskUpdateManyWithWhereWithoutProjectInput | Prisma.TaskUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.TaskScalarWhereInput | Prisma.TaskScalarWhereInput[]
 }
 
 export type EnumPriorityFieldUpdateOperationsInput = {
@@ -551,8 +641,10 @@ export type TaskCreateWithoutUserInput = {
   dueDate?: Date | string | null
   completed?: boolean
   status?: $Enums.Status
+  kanbanColumn?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
 }
 
 export type TaskUncheckedCreateWithoutUserInput = {
@@ -563,8 +655,10 @@ export type TaskUncheckedCreateWithoutUserInput = {
   dueDate?: Date | string | null
   completed?: boolean
   status?: $Enums.Status
+  kanbanColumn?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  projectId?: number | null
 }
 
 export type TaskCreateOrConnectWithoutUserInput = {
@@ -604,9 +698,64 @@ export type TaskScalarWhereInput = {
   dueDate?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   completed?: Prisma.BoolFilter<"Task"> | boolean
   status?: Prisma.EnumStatusFilter<"Task"> | $Enums.Status
+  kanbanColumn?: Prisma.StringFilter<"Task"> | string
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
   userId?: Prisma.IntNullableFilter<"Task"> | number | null
+  projectId?: Prisma.IntNullableFilter<"Task"> | number | null
+}
+
+export type TaskCreateWithoutProjectInput = {
+  title: string
+  description?: string | null
+  priority?: $Enums.Priority
+  dueDate?: Date | string | null
+  completed?: boolean
+  status?: $Enums.Status
+  kanbanColumn?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutTasksInput
+}
+
+export type TaskUncheckedCreateWithoutProjectInput = {
+  id?: number
+  title: string
+  description?: string | null
+  priority?: $Enums.Priority
+  dueDate?: Date | string | null
+  completed?: boolean
+  status?: $Enums.Status
+  kanbanColumn?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId?: number | null
+}
+
+export type TaskCreateOrConnectWithoutProjectInput = {
+  where: Prisma.TaskWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput>
+}
+
+export type TaskCreateManyProjectInputEnvelope = {
+  data: Prisma.TaskCreateManyProjectInput | Prisma.TaskCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type TaskUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.TaskWhereUniqueInput
+  update: Prisma.XOR<Prisma.TaskUpdateWithoutProjectInput, Prisma.TaskUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.TaskCreateWithoutProjectInput, Prisma.TaskUncheckedCreateWithoutProjectInput>
+}
+
+export type TaskUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.TaskWhereUniqueInput
+  data: Prisma.XOR<Prisma.TaskUpdateWithoutProjectInput, Prisma.TaskUncheckedUpdateWithoutProjectInput>
+}
+
+export type TaskUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.TaskScalarWhereInput
+  data: Prisma.XOR<Prisma.TaskUpdateManyMutationInput, Prisma.TaskUncheckedUpdateManyWithoutProjectInput>
 }
 
 export type TaskCreateManyUserInput = {
@@ -617,8 +766,10 @@ export type TaskCreateManyUserInput = {
   dueDate?: Date | string | null
   completed?: boolean
   status?: $Enums.Status
+  kanbanColumn?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  projectId?: number | null
 }
 
 export type TaskUpdateWithoutUserInput = {
@@ -628,8 +779,10 @@ export type TaskUpdateWithoutUserInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
 }
 
 export type TaskUncheckedUpdateWithoutUserInput = {
@@ -640,8 +793,10 @@ export type TaskUncheckedUpdateWithoutUserInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type TaskUncheckedUpdateManyWithoutUserInput = {
@@ -652,8 +807,65 @@ export type TaskUncheckedUpdateManyWithoutUserInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type TaskCreateManyProjectInput = {
+  id?: number
+  title: string
+  description?: string | null
+  priority?: $Enums.Priority
+  dueDate?: Date | string | null
+  completed?: boolean
+  status?: $Enums.Status
+  kanbanColumn?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId?: number | null
+}
+
+export type TaskUpdateWithoutProjectInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneWithoutTasksNestedInput
+}
+
+export type TaskUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type TaskUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  kanbanColumn?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -666,10 +878,13 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   dueDate?: boolean
   completed?: boolean
   status?: boolean
+  kanbanColumn?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
+  projectId?: boolean
   user?: boolean | Prisma.Task$userArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -680,10 +895,13 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   dueDate?: boolean
   completed?: boolean
   status?: boolean
+  kanbanColumn?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
+  projectId?: boolean
   user?: boolean | Prisma.Task$userArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -694,10 +912,13 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   dueDate?: boolean
   completed?: boolean
   status?: boolean
+  kanbanColumn?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
+  projectId?: boolean
   user?: boolean | Prisma.Task$userArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
 
 export type TaskSelectScalar = {
@@ -708,26 +929,32 @@ export type TaskSelectScalar = {
   dueDate?: boolean
   completed?: boolean
   status?: boolean
+  kanbanColumn?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
+  projectId?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "priority" | "dueDate" | "completed" | "status" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "priority" | "dueDate" | "completed" | "status" | "kanbanColumn" | "createdAt" | "updatedAt" | "userId" | "projectId", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Task$userArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
 }
 export type TaskIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Task$userArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
 }
 export type TaskIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Task$userArgs<ExtArgs>
+  project?: boolean | Prisma.Task$projectArgs<ExtArgs>
 }
 
 export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Task"
   objects: {
     user: Prisma.$UserPayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -737,9 +964,11 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     dueDate: Date | null
     completed: boolean
     status: $Enums.Status
+    kanbanColumn: string
     createdAt: Date
     updatedAt: Date
     userId: number | null
+    projectId: number | null
   }, ExtArgs["result"]["task"]>
   composites: {}
 }
@@ -1135,6 +1364,7 @@ readonly fields: TaskFieldRefs;
 export interface Prisma__TaskClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.Task$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.Task$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Task$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1171,9 +1401,11 @@ export interface TaskFieldRefs {
   readonly dueDate: Prisma.FieldRef<"Task", 'DateTime'>
   readonly completed: Prisma.FieldRef<"Task", 'Boolean'>
   readonly status: Prisma.FieldRef<"Task", 'Status'>
+  readonly kanbanColumn: Prisma.FieldRef<"Task", 'String'>
   readonly createdAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Task", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Task", 'Int'>
+  readonly projectId: Prisma.FieldRef<"Task", 'Int'>
 }
     
 
@@ -1591,6 +1823,25 @@ export type Task$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Task.project
+ */
+export type Task$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
 }
 
 /**

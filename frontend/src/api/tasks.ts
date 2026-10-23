@@ -6,6 +6,7 @@ export interface TaskFilterParams {
   filter?: FilterType;
   priority?: Priority;
   search?: string;
+  projectId?: number;
 }
 
 export async function fetchTasksApi(params: TaskFilterParams = {}): Promise<Task[]> {
@@ -19,6 +20,9 @@ export async function fetchTasksApi(params: TaskFilterParams = {}): Promise<Task
   }
   if (params.search && params.search.trim() !== "") {
     query.set("search", params.search.trim());
+  }
+  if (params.projectId !== undefined) {
+    query.set("projectId", String(params.projectId));
   }
 
   const queryString = query.toString() ? `?${query.toString()}` : "";

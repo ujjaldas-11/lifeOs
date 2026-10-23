@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, Calendar, Trash2, Edit2, AlertCircle } from "lucide-react";
+import { Check, Calendar, Trash2, Edit2, AlertCircle, FolderGit2 } from "lucide-react";
 import { PriorityBadge, Badge } from "../ui/Badge";
 import type { Task } from "../../types/task";
 import { cn } from "../../lib/utils";
@@ -88,10 +88,10 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
   return (
     <div
       className={cn(
-        "group relative flex items-start gap-3.5 rounded-xl border p-4 transition-all duration-150",
+        "group relative flex items-start gap-3 rounded-md border p-3.5 transition-colors",
         task.completed
-          ? "border-slate-800/60 bg-slate-950/40 opacity-75"
-          : "border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-900/80 shadow-sm"
+          ? "border-[#222736] bg-[#0d0f14] opacity-65"
+          : "border-[#222736] bg-[#13161f] hover:border-[#384259]"
       )}
     >
       {/* Complete toggle checkbox */}
@@ -101,26 +101,35 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
         disabled={isToggling}
         title={task.completed ? "Mark as pending" : "Mark as completed"}
         className={cn(
-          "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all duration-150 cursor-pointer",
+          "mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border transition-colors cursor-pointer",
           task.completed
             ? "border-emerald-500 bg-emerald-500 text-white"
-            : "border-slate-600 bg-slate-900/80 hover:border-blue-500 text-transparent hover:text-blue-400"
+            : "border-[#384259] bg-[#161922] hover:border-blue-500 text-transparent hover:text-blue-400"
         )}
       >
-        <Check className={cn("h-3.5 w-3.5 stroke-[3]", task.completed ? "opacity-100" : "opacity-0 hover:opacity-100")} />
+        <Check className={cn("h-3 w-3 stroke-[3]", task.completed ? "opacity-100" : "opacity-0 hover:opacity-100")} />
       </button>
 
       {/* Task Content */}
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-          <h4
-            className={cn(
-              "text-sm font-medium leading-snug transition-all",
-              task.completed ? "text-slate-500 line-through" : "text-slate-100"
+          <div className="flex items-center gap-2 flex-wrap">
+            <h4
+              className={cn(
+                "text-xs font-medium leading-snug",
+                task.completed ? "text-[#8b949e] line-through" : "text-[#e6edf3]"
+              )}
+            >
+              {task.title}
+            </h4>
+
+            {task.project && (
+              <span className="inline-flex items-center gap-1 rounded bg-[#161922] border border-[#222736] px-1.5 py-0.2 text-[10px] font-mono text-[#8b949e]">
+                <FolderGit2 className="h-2.5 w-2.5 text-blue-400" />
+                <span>{task.project.name}</span>
+              </span>
             )}
-          >
-            {task.title}
-          </h4>
+          </div>
 
           {/* Badges container */}
           <div className="flex items-center gap-1.5 shrink-0">
@@ -137,8 +146,8 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
         {task.description && (
           <p
             className={cn(
-              "mt-1.5 text-xs text-slate-400 leading-relaxed whitespace-pre-wrap line-clamp-2",
-              task.completed && "text-slate-500 line-through"
+              "mt-1 text-xs text-[#8b949e] leading-relaxed whitespace-pre-wrap line-clamp-2",
+              task.completed && "line-through text-[#57606a]"
             )}
           >
             {task.description}
@@ -152,18 +161,18 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
           type="button"
           onClick={() => onEdit(task)}
           title="Edit Task"
-          className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors cursor-pointer"
+          className="rounded p-1 text-[#8b949e] hover:bg-[#161922] hover:text-[#e6edf3] transition-colors cursor-pointer"
         >
-          <Edit2 className="h-3.5 w-3.5" />
+          <Edit2 className="h-3 w-3" />
         </button>
         <button
           type="button"
           onClick={handleDelete}
           disabled={isDeleting}
           title="Delete Task"
-          className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-rose-400 transition-colors cursor-pointer"
+          className="rounded p-1 text-[#8b949e] hover:bg-[#161922] hover:text-[#f85149] transition-colors cursor-pointer"
         >
-          <Trash2 className="h-3.5 w-3.5" />
+          <Trash2 className="h-3 w-3" />
         </button>
       </div>
     </div>

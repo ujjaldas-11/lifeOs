@@ -10,26 +10,26 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", isLoading, children, disabled, ...props }, ref) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer rounded-lg";
+      "inline-flex items-center justify-center font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer rounded-md";
 
     const variantStyles = {
       primary:
-        "bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 shadow-sm shadow-blue-900/30",
+        "bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 border border-blue-500/40",
       secondary:
-        "bg-slate-800 text-slate-100 hover:bg-slate-700 active:bg-slate-800/80 border border-slate-700/60",
+        "bg-[#161922] text-[#e6edf3] hover:bg-[#1f2432] active:bg-[#161922] border border-[#222736]",
       outline:
-        "border border-slate-700 bg-transparent text-slate-200 hover:bg-slate-800/60 active:bg-slate-800",
+        "border border-[#222736] bg-transparent text-[#e6edf3] hover:bg-[#161922] active:bg-[#1c2130]",
       ghost:
-        "text-slate-300 hover:bg-slate-800/60 hover:text-white active:bg-slate-800",
+        "text-[#8b949e] hover:bg-[#161922] hover:text-[#e6edf3] active:bg-[#1c2130]",
       destructive:
-        "bg-red-600/90 text-white hover:bg-red-600 active:bg-red-700 shadow-sm shadow-red-900/20",
+        "bg-red-600/90 text-white hover:bg-red-600 active:bg-red-700 border border-red-500/40",
     };
 
     const sizeStyles = {
-      sm: "h-8 px-3 text-xs gap-1.5",
-      md: "h-9.5 px-4 text-sm gap-2",
-      lg: "h-11 px-5 text-base gap-2.5",
-      icon: "h-9 w-9 p-0",
+      sm: "h-8 px-2.5 text-xs gap-1.5",
+      md: "h-9 px-3.5 text-sm gap-2",
+      lg: "h-10 px-4 text-sm gap-2.5",
+      icon: "h-8.5 w-8.5 p-0",
     };
 
     return (

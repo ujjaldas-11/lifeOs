@@ -44,32 +44,29 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
-      {/* Background radial gradient glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-[#0d0f14] p-4">
+      <div className="w-full max-w-md">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-xl shadow-blue-500/25 text-white mb-4">
-            <Terminal className="h-6 w-6" />
+          <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-[#161922] border border-[#222736] text-blue-400 mb-3.5">
+            <Terminal className="h-5 w-5" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Welcome back to LifeOS</h1>
-          <p className="text-xs text-slate-400 mt-1.5">
-            Your personal developer operating system & task commander
+          <h1 className="text-xl font-semibold tracking-tight text-[#e6edf3]">Welcome back to LifeOS</h1>
+          <p className="text-xs text-[#8b949e] mt-1">
+            Personal developer operating system & task commander
           </p>
         </div>
 
-        <Card className="border-slate-800 bg-slate-900/80 shadow-2xl backdrop-blur-xl">
-          <CardContent className="p-6 sm:p-8">
+        <Card className="border-[#222736] bg-[#13161f]">
+          <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="rounded-lg bg-red-950/60 border border-red-800/80 p-3 text-xs text-red-300 font-medium">
+                <div className="rounded-md bg-[#3c1e22] border border-[#67252b] p-3 text-xs text-[#f85149] font-medium">
                   {error}
                 </div>
               )}
 
-              <div className="relative">
+              <div>
                 <Input
                   label="Email Address"
                   type="email"
@@ -92,7 +89,7 @@ export function LoginPage() {
                 />
               </div>
 
-              <Button type="submit" size="lg" className="w-full mt-2" isLoading={isLoading}>
+              <Button type="submit" size="md" className="w-full mt-2" isLoading={isLoading}>
                 <span>Sign In to LifeOS</span>
                 <ArrowRight className="h-4 w-4 ml-1.5" />
               </Button>
@@ -102,15 +99,15 @@ export function LoginPage() {
                 <button
                   type="button"
                   onClick={handleDemoFill}
-                  className="w-full rounded-lg border border-dashed border-slate-700/80 bg-slate-950/50 p-2.5 text-xs text-slate-400 hover:text-blue-400 hover:border-blue-500/50 transition-colors cursor-pointer text-center"
+                  className="w-full rounded border border-dashed border-[#222736] bg-[#161922] p-2 text-xs text-[#8b949e] hover:text-blue-400 hover:border-blue-500/50 transition-colors cursor-pointer text-center"
                 >
-                  ⚡ Autofill seeded demo account (<code className="text-blue-300">alex@example.com</code>)
+                  ⚡ Autofill seeded demo account (<code className="text-blue-400 font-mono">alex@example.com</code>)
                 </button>
               </div>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-slate-800/80 text-center">
-              <p className="text-xs text-slate-400">
+            <div className="mt-5 pt-5 border-t border-[#222736] text-center">
+              <p className="text-xs text-[#8b949e]">
                 Don't have an account yet?{" "}
                 <Link
                   to="/register"

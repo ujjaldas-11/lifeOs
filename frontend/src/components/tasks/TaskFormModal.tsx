@@ -3,23 +3,45 @@ import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { createTaskApi, updateTaskApi } from "../../api/tasks";
-import type { Task, Priority } from "../../types/task";
+import { fetchProjectsApi } from "../../api/projects";
+import type { Task, Priority, KanbanColumn } from "../../types/task";
+import type { Project } from "../../types/project";
 
 interface TaskFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
   taskToEdit?: Task | null;
+  defaultProjectId?: number | null;
+  defaultKanbanColumn?: KanbanColumn | string;
 }
 
-export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFormModalProps) {
+export function TaskFormModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  taskToEdit,
+  defaultProjectId,
+  defaultKanbanColumn,
+}: TaskFormModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<Priority>("MEDIUM");
   const [dueDate, setDueDate] = useState("");
   const [completed, setCompleted] = useState(false);
+  const [projectId, setProjectId] = useState<number | "">(defaultProjectId ?? "");
+  const [kanbanColumn, setKanbanColumn] = useState<string>(defaultKanbanColumn ?? "TODO");
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchProjectsApi()
+        .then((res) => setProjects(res))
+        .catch((err) => console.error("Failed to load projects in task modal:", err));
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (taskToEdit) {
@@ -27,23 +49,25 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
       setDescription(taskToEdit.description || "");
       setPriority(taskToEdit.priority || "MEDIUM");
       setCompleted(taskToEdit.completed || false);
+      setProjectId(taskToEdit.projectId ?? "");
+      setKanbanColumn(taskToEdit.kanbanColumn ?? "TODO");
       if (taskToEdit.dueDate) {
-        // Format to YYYY-MM-DD for date input
         const d = new Date(taskToEdit.dueDate);
         setDueDate(d.toISOString().split("T")[0] || "");
       } else {
         setDueDate("");
       }
     } else {
-      // Defaults for new task
       setTitle("");
       setDescription("");
       setPriority("MEDIUM");
       setCompleted(false);
       setDueDate("");
+      setProjectId(defaultProjectId ?? "");
+      setKanbanColumn(defaultKanbanColumn ?? "TODO");
     }
     setError(null);
-  }, [taskToEdit, isOpen]);
+  }, [taskToEdit, isOpen, defaultProjectId, defaultKanbanColumn]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -57,6 +81,7 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
       setError(null);
 
       const formattedDueDate = dueDate ? new Date(`${dueDate}T12:00:00Z`).toISOString() : null;
+      const parsedProjectId = projectId ? Number(projectId) : null;
 
       if (taskToEdit) {
         await updateTaskApi(taskToEdit.id, {
@@ -65,6 +90,8 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
           priority,
           dueDate: formattedDueDate,
           completed,
+          projectId: parsedProjectId,
+          kanbanColumn,
         });
       } else {
         await createTaskApi({
@@ -73,6 +100,8 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
           priority,
           dueDate: formattedDueDate,
           completed: false,
+          projectId: parsedProjectId,
+          kanbanColumn,
         });
       }
 
@@ -103,7 +132,7 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="rounded-lg bg-red-950/60 border border-red-800/80 p-3 text-xs text-red-300">
+          <div className="rounded-md bg-[#3c1e22] border border-[#67252b] p-3 text-xs text-[#f85149]">
             {error}
           </div>
         )}
@@ -118,7 +147,7 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
         />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-slate-300 uppercase tracking-wider">
+          <label className="text-xs font-medium text-[#8b949e] uppercase tracking-wider">
             Description
           </label>
           <textarea
@@ -126,23 +155,60 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Add context, acceptance criteria or links..."
-            className="w-full rounded-lg bg-slate-900/90 border border-slate-700/80 px-3.5 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:border-blue-500 transition-colors"
+            className="w-full rounded-md bg-[#161922] border border-[#222736] px-3.5 py-2 text-sm text-[#e6edf3] placeholder:text-[#57606a] focus:outline-none focus:border-blue-500 transition-colors"
           />
+        </div>
+
+        {/* Project & Kanban Column Selection */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs font-medium text-[#8b949e] uppercase tracking-wider mb-1.5">
+              Project (Optional)
+            </label>
+            <select
+              value={projectId}
+              onChange={(e) => setProjectId(e.target.value ? Number(e.target.value) : "")}
+              className="w-full rounded-md bg-[#161922] border border-[#222736] px-3 py-2 text-xs text-[#e6edf3] focus:outline-none focus:border-blue-500"
+            >
+              <option value="">No Project (Personal Task)</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-[#8b949e] uppercase tracking-wider mb-1.5">
+              Kanban Column
+            </label>
+            <select
+              value={kanbanColumn}
+              onChange={(e) => setKanbanColumn(e.target.value)}
+              className="w-full rounded-md bg-[#161922] border border-[#222736] px-3 py-2 text-xs text-[#e6edf3] focus:outline-none focus:border-blue-500 font-mono"
+            >
+              <option value="TODO">TODO</option>
+              <option value="IN_PROGRESS">IN_PROGRESS</option>
+              <option value="REVIEW">REVIEW</option>
+              <option value="DONE">DONE</option>
+            </select>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Priority Selection */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-slate-300 uppercase tracking-wider">
+            <label className="text-xs font-medium text-[#8b949e] uppercase tracking-wider">
               Priority
             </label>
-            <div className="grid grid-cols-3 gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-800">
+            <div className="grid grid-cols-3 gap-1 bg-[#161922] p-1 rounded-md border border-[#222736]">
               {(["LOW", "MEDIUM", "HIGH"] as Priority[]).map((p) => {
                 const isSelected = priority === p;
                 const colors = {
-                  LOW: isSelected ? "bg-emerald-600 text-white" : "text-emerald-400 hover:bg-slate-850",
-                  MEDIUM: isSelected ? "bg-amber-600 text-white" : "text-amber-400 hover:bg-slate-850",
-                  HIGH: isSelected ? "bg-rose-600 text-white" : "text-rose-400 hover:bg-slate-850",
+                  LOW: isSelected ? "bg-[#162a1c] text-[#3fb950] border-[#224b2b]" : "text-[#8b949e] hover:bg-[#1f2432]",
+                  MEDIUM: isSelected ? "bg-[#342c16] text-[#e3b341] border-[#59491a]" : "text-[#8b949e] hover:bg-[#1f2432]",
+                  HIGH: isSelected ? "bg-[#3c1e22] text-[#f85149] border-[#67252b]" : "text-[#8b949e] hover:bg-[#1f2432]",
                 }[p];
 
                 return (
@@ -150,9 +216,9 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
                     key={p}
                     type="button"
                     onClick={() => setPriority(p)}
-                    className={`py-1.5 text-xs font-medium rounded-md transition-all cursor-pointer ${colors}`}
+                    className={`py-1 text-xs font-mono font-medium rounded border transition-colors cursor-pointer ${colors}`}
                   >
-                    {p.charAt(0) + p.slice(1).toLowerCase()}
+                    {p}
                   </button>
                 );
               })}
@@ -162,14 +228,14 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
           {/* Due Date Input */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-slate-300 uppercase tracking-wider">
+              <label className="text-xs font-medium text-[#8b949e] uppercase tracking-wider">
                 Due Date
               </label>
               {dueDate && (
                 <button
                   type="button"
                   onClick={() => setDueDate("")}
-                  className="text-[11px] text-slate-500 hover:text-slate-300 cursor-pointer"
+                  className="text-[11px] font-mono text-[#8b949e] hover:text-[#e6edf3] cursor-pointer"
                 >
                   Clear
                 </button>
@@ -179,30 +245,30 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full rounded-lg bg-slate-900/90 border border-slate-700/80 px-3 py-1.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+              className="w-full rounded-md bg-[#161922] border border-[#222736] px-3 py-1.5 text-xs text-[#e6edf3] focus:outline-none focus:border-blue-500 font-mono"
             />
             {/* Quick date presets */}
-            <div className="flex items-center gap-1.5 mt-1">
+            <div className="flex items-center gap-1.5 mt-1 font-mono">
               <button
                 type="button"
                 onClick={() => setQuickDate(0)}
-                className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded cursor-pointer transition-colors"
+                className="text-[10px] bg-[#161922] hover:bg-[#1f2432] text-[#8b949e] hover:text-[#e6edf3] px-2 py-0.5 rounded border border-[#222736] cursor-pointer transition-colors"
               >
                 Today
               </button>
               <button
                 type="button"
                 onClick={() => setQuickDate(1)}
-                className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded cursor-pointer transition-colors"
+                className="text-[10px] bg-[#161922] hover:bg-[#1f2432] text-[#8b949e] hover:text-[#e6edf3] px-2 py-0.5 rounded border border-[#222736] cursor-pointer transition-colors"
               >
                 Tomorrow
               </button>
               <button
                 type="button"
                 onClick={() => setQuickDate(7)}
-                className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded cursor-pointer transition-colors"
+                className="text-[10px] bg-[#161922] hover:bg-[#1f2432] text-[#8b949e] hover:text-[#e6edf3] px-2 py-0.5 rounded border border-[#222736] cursor-pointer transition-colors"
               >
-                Next Week
+                +1 Week
               </button>
             </div>
           </div>
@@ -210,24 +276,24 @@ export function TaskFormModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskFo
 
         {/* Completed status checkbox (when editing) */}
         {taskToEdit && (
-          <div className="flex items-center gap-2 pt-2 border-t border-slate-800">
+          <div className="flex items-center gap-2 pt-2 border-t border-[#222736]">
             <input
               type="checkbox"
               id="modal-task-completed"
               checked={completed}
               onChange={(e) => setCompleted(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-blue-500 cursor-pointer"
+              className="h-4 w-4 rounded border-[#222736] bg-[#161922] text-blue-600 focus:ring-blue-500 cursor-pointer"
             />
             <label
               htmlFor="modal-task-completed"
-              className="text-sm font-medium text-slate-300 cursor-pointer"
+              className="text-xs font-medium text-[#8b949e] cursor-pointer"
             >
               Mark task as completed
             </label>
           </div>
         )}
 
-        <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-800">
+        <div className="flex justify-end gap-2 pt-3 border-t border-[#222736]">
           <Button type="button" variant="outline" size="sm" onClick={onClose}>
             Cancel
           </Button>

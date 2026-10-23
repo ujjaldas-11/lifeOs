@@ -13,25 +13,122 @@ model User {
   email        String   @unique
   passwordHash String
 
-  tasks        Task[]
+  tasks         Task[]
+  habits        Habit[]
+  events        Event[]
+  notes         Note[]
+  projects      Project[]
+  focusSessions FocusSession[]
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
+model Project {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  techStack   String[]      @default([])
+  githubUrl   String?
+  status      ProjectStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  userId      Int
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tasks       Task[]
+  notes       Note[]
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+}
+
 model Task {
-  id          Int       @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String?
+  priority     Priority  @default(MEDIUM)
+  dueDate      DateTime?
+  completed    Boolean   @default(false)
+  status       Status    @default(PENDING)
+  kanbanColumn String    @default("TODO") // "TODO" | "IN_PROGRESS" | "REVIEW" | "DONE"
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  userId       Int?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  projectId    Int?
+  project      Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+}
+
+model Habit {
+  id              Int        @id @default(autoincrement())
+  name            String
+  frequency       String     @default("DAILY")
+  currentStreak   Int        @default(0)
+  longestStreak   Int        @default(0)
+  lastCompletedAt DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  userId          Int
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  logs            HabitLog[]
+}
+
+model HabitLog {
+  id          Int      @id @default(autoincrement())
+  habitId     Int
+  habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  date        String   // "YYYY-MM-DD" format
+  completedAt DateTime @default(now())
+
+  @@unique([habitId, date])
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
   title       String
   description String?
-  priority    Priority  @default(MEDIUM)
-  dueDate     DateTime?
-  completed   Boolean   @default(false)
-  status      Status    @default(PENDING)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  date        DateTime
+  time        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  userId Int?
-  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   @default("")
+  tags      String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  projectId Int?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+}
+
+model FocusSession {
+  id          Int      @id @default(autoincrement())
+  durationMin Int      @default(25)
+  taskTitle   String?
+  taskId      Int?
+  completedAt DateTime @default(now())
+
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Priority {

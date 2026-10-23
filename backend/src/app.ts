@@ -2,6 +2,12 @@ import express, { type Request, type Response, type NextFunction } from "express
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
+import habitRoutes from "./routes/habit.routes.js";
+import eventRoutes from "./routes/event.routes.js";
+import noteRoutes from "./routes/note.routes.js";
+import projectRoutes from "./routes/project.routes.js";
+import focusRoutes from "./routes/focus.routes.js";
+import analyticsRoutes from "./routes/analytics.routes.js";
 
 const app = express();
 
@@ -19,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (_req: Request, res: Response) => {
   res.json({
     name: "Personal Developer Life OS API",
-    version: "1.0.0",
+    version: "3.0.0",
     status: "healthy",
     message: "LifeOS API is running 🚀",
   });
@@ -35,6 +41,12 @@ app.get("/api/health", (_req: Request, res: Response) => {
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/habits", habitRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/notes", noteRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/focus", focusRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 // 404 Handler
 app.use((req: Request, res: Response) => {

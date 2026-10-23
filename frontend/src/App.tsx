@@ -6,7 +6,11 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { TasksPage } from "./pages/TasksPage";
-import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { HabitsPage } from "./pages/HabitsPage";
+import { EventsPage } from "./pages/EventsPage";
+import { NotesPage } from "./pages/NotesPage";
+import { ProjectsPage } from "./pages/ProjectsPage";
+import { SettingsPage } from "./pages/SettingsPage";
 
 export default function App() {
   return (
@@ -26,76 +30,12 @@ export default function App() {
             }
           >
             <Route path="/" element={<DashboardPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/tasks" element={<TasksPage />} />
-
-            {/* Placeholders for future phases */}
-            <Route
-              path="/notes"
-              element={
-                <PlaceholderPage
-                  moduleName="Developer Notes & Snippets"
-                  phase="Phase 2"
-                  description="A rich markdown note-taking workspace with syntax highlighting, tag taxonomies, and architectural decision records (ADRs)."
-                  plannedFeatures={[
-                    "Markdown WYSIWYG editor with KaTeX & Mermaid diagrams",
-                    "Code snippet organizer with syntax highlighting",
-                    "Tag filtering and full-text search",
-                    "Task embedding directly inside notes",
-                  ]}
-                />
-              }
-            />
-
-            <Route
-              path="/projects"
-              element={
-                <PlaceholderPage
-                  moduleName="Projects & Repositories"
-                  phase="Phase 2"
-                  description="Group your tasks and sprints into cohesive projects with progress tracking, milestones, and Git repository links."
-                  plannedFeatures={[
-                    "Project boards with Kanban workflow",
-                    "Sprint milestones & progress meters",
-                    "GitHub repository linkage and commit sync",
-                    "Multi-project task overview",
-                  ]}
-                />
-              }
-            />
-
-            <Route
-              path="/habits"
-              element={
-                <PlaceholderPage
-                  moduleName="Developer Habits & Deep Work"
-                  phase="Phase 3"
-                  description="Cultivate consistent developer habits: daily commit streaks, reading technical documentation, and Pomodoro deep work blocks."
-                  plannedFeatures={[
-                    "Habit tracking streaks & heatmap grids",
-                    "Pomodoro / deep focus timer integrated with active task",
-                    "Weekly developer review & retrospective generator",
-                    "Health and posture reminder prompts",
-                  ]}
-                />
-              }
-            />
-
-            <Route
-              path="/settings"
-              element={
-                <PlaceholderPage
-                  moduleName="System Settings & Preferences"
-                  phase="Phase 3"
-                  description="Manage your account profile, API keys, database backups, notifications, and theme customizations."
-                  plannedFeatures={[
-                    "Profile and avatar preferences",
-                    "JWT token refresh & security configurations",
-                    "Export workspace data as JSON/CSV",
-                    "Custom theme accent options",
-                  ]}
-                />
-              }
-            />
+            <Route path="/habits" element={<HabitsPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/notes" element={<NotesPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
 
           {/* Catch-all redirect */}

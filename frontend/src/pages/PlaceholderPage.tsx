@@ -18,17 +18,17 @@ export function PlaceholderPage({
 }: PlaceholderPageProps) {
   return (
     <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 p-6 md:p-8 backdrop-blur-sm">
+      <div className="rounded-lg border border-[#222736] bg-[#13161f] p-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400">
+            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-blue-400">
               <Construction className="h-4 w-4" />
               <span>Upcoming Module • {phase}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mt-1">
+            <h2 className="text-xl font-bold tracking-tight text-[#e6edf3] mt-1">
               {moduleName}
             </h2>
-            <p className="text-sm text-slate-400 mt-1 max-w-xl">{description}</p>
+            <p className="text-xs text-[#8b949e] mt-1 max-w-xl font-mono">{description}</p>
           </div>
 
           <Link to="/tasks">
@@ -40,44 +40,21 @@ export function PlaceholderPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-indigo-400" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="border-[#222736] bg-[#13161f]">
+          <CardContent className="p-5">
+            <h3 className="text-sm font-semibold text-[#e6edf3] flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-blue-400" />
               <span>Planned Functionality for {moduleName}</span>
             </h3>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-3 space-y-2">
               {plannedFeatures.map((feat, index) => (
-                <li key={index} className="flex items-center gap-2.5 text-xs text-slate-300">
-                  <span className="flex h-1.5 w-1.5 rounded-full bg-blue-500" />
+                <li key={index} className="flex items-center gap-2 text-xs text-[#8b949e] font-mono">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
                   <span>{feat}</span>
                 </li>
               ))}
             </ul>
-          </CardContent>
-        </Card>
-
-        <Card className="border-dashed border-slate-800 bg-slate-950/40">
-          <CardContent className="p-6 flex flex-col justify-between h-full">
-            <div>
-              <span className="rounded bg-slate-800 px-2 py-0.5 text-[11px] font-mono text-slate-400">
-                Phase 1 Active Focus
-              </span>
-              <h4 className="text-sm font-semibold text-slate-200 mt-3">
-                Core Foundation & Tasks Module Complete
-              </h4>
-              <p className="text-xs text-slate-400 mt-1">
-                You can manage all your daily developer tasks, prioritize high/medium/low items,
-                and filter by Today, Upcoming, and Overdue right now.
-              </p>
-            </div>
-
-            <Link to="/tasks" className="mt-6">
-              <Button size="sm" className="w-full">
-                Go to Tasks Backlog
-              </Button>
-            </Link>
           </CardContent>
         </Card>
       </div>

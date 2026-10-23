@@ -41,23 +41,23 @@ export function TaskStats({ tasks }: TaskStatsProps) {
       desc: "Scheduled for today",
       icon: Clock,
       color: "text-blue-400",
-      bg: "bg-blue-500/10 border-blue-500/20",
+      bg: "bg-[#152744] border-[#1f4277]",
     },
     {
       title: "Overdue",
       value: overdueTasks,
       desc: "Needs attention",
       icon: AlertTriangle,
-      color: "text-rose-400",
-      bg: "bg-rose-500/10 border-rose-500/20",
+      color: "text-[#f85149]",
+      bg: "bg-[#3c1e22] border-[#67252b]",
     },
     {
       title: "Upcoming",
       value: upcomingTasks,
       desc: "Later this week",
       icon: CalendarDays,
-      color: "text-indigo-400",
-      bg: "bg-indigo-500/10 border-indigo-500/20",
+      color: "text-[#bc8cff]",
+      bg: "bg-[#241e3d] border-[#3f326a]",
     },
     {
       title: "Completed Rate",
@@ -65,7 +65,7 @@ export function TaskStats({ tasks }: TaskStatsProps) {
       desc: `${completed} of ${total} finished`,
       icon: CheckCircle2,
       color: "text-emerald-400",
-      bg: "bg-emerald-500/10 border-emerald-500/20",
+      bg: "bg-[#162a1c] border-[#224b2b]",
     },
   ];
 
@@ -74,17 +74,19 @@ export function TaskStats({ tasks }: TaskStatsProps) {
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <Card key={stat.title} className="p-0 border-slate-800 bg-slate-900/60">
-            <CardContent className="p-4 sm:p-5">
+          <Card key={stat.title} className="border-[#222736] bg-[#13161f]">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-400">{stat.title}</span>
-                <div className={`p-2 rounded-lg border ${stat.bg}`}>
-                  <Icon className={`h-4 w-4 ${stat.color}`} />
+                <span className="text-xs font-medium text-[#8b949e]">{stat.title}</span>
+                <div className={`p-1.5 rounded border ${stat.bg}`}>
+                  <Icon className={`h-3.5 w-3.5 ${stat.color}`} />
                 </div>
               </div>
-              <div className="mt-3">
-                <div className="text-2xl font-bold tracking-tight text-slate-100">{stat.value}</div>
-                <p className="text-[11px] text-slate-500 mt-0.5">{stat.desc}</p>
+              <div className="mt-2.5">
+                <div className="text-2xl font-bold font-mono tracking-tight text-[#e6edf3]">
+                  {stat.value}
+                </div>
+                <p className="text-[11px] font-mono text-[#8b949e] mt-0.5">{stat.desc}</p>
               </div>
             </CardContent>
           </Card>

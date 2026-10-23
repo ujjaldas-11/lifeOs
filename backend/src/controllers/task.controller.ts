@@ -12,7 +12,7 @@ const VALID_PRIORITIES = ["low", "medium", "high", "LOW", "MEDIUM", "HIGH"];
 
 export const getTasks = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { filter, priority, search } = req.query;
+    const { filter, priority, search, projectId } = req.query;
     const userId = req.user?.userId;
 
     const tasks = await getAllTasks({
@@ -20,6 +20,7 @@ export const getTasks = async (req: AuthenticatedRequest, res: Response) => {
       filter: typeof filter === "string" ? filter : undefined,
       priority: typeof priority === "string" ? priority : undefined,
       search: typeof search === "string" ? search : undefined,
+      projectId: projectId ? Number(projectId) : undefined,
     });
 
     return res.status(200).json({
@@ -70,7 +71,7 @@ export const getTask = async (req: AuthenticatedRequest, res: Response) => {
 
 export const addTask = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { title, description, priority, dueDate, completed } = req.body;
+    const { title, description, priority, dueDate, completed, projectId, kanbanColumn } = req.body;
 
     if (!title || typeof title !== "string" || !title.trim()) {
       return res.status(400).json({
@@ -102,7 +103,9 @@ export const addTask = async (req: AuthenticatedRequest, res: Response) => {
       description,
       priority,
       dueDate: parsedDueDate,
-      completed: typeof completed === "boolean" ? completed : false,
+      completed: typeof completed === "boolean" ? completed : undefined,
+      projectId: projectId !== undefined ? (projectId === null ? null : Number(projectId)) : undefined,
+      kanbanColumn: typeof kanbanColumn === "string" ? kanbanColumn : undefined,
       userId: req.user?.userId,
     });
 
@@ -130,7 +133,7 @@ export const updateTask = async (req: AuthenticatedRequest, res: Response) => {
       });
     }
 
-    const { title, description, priority, dueDate, completed, status } = req.body;
+    const { title, description, priority, dueDate, completed, status, projectId, kanbanColumn } = req.body;
 
     if (priority && !VALID_PRIORITIES.includes(priority)) {
       return res.status(400).json({
@@ -158,6 +161,8 @@ export const updateTask = async (req: AuthenticatedRequest, res: Response) => {
         dueDate,
         completed,
         status,
+        projectId: projectId !== undefined ? (projectId === null ? null : Number(projectId)) : undefined,
+        kanbanColumn: typeof kanbanColumn === "string" ? kanbanColumn : undefined,
       },
       req.user?.userId
     );

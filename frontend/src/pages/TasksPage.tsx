@@ -115,6 +115,7 @@ export function TasksPage() {
       setAllTasksForCounts((prev) =>
         prev.map((t) => (t.id === id ? { ...t, completed, status: completed ? "COMPLETED" : "PENDING" } : t))
       );
+      window.dispatchEvent(new CustomEvent("lifeos:task-updated"));
     } catch (err) {
       console.error("Failed to toggle task:", err);
       loadTasks();
@@ -126,6 +127,7 @@ export function TasksPage() {
       await deleteTaskApi(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
       setAllTasksForCounts((prev) => prev.filter((t) => t.id !== id));
+      window.dispatchEvent(new CustomEvent("lifeos:task-updated"));
     } catch (err) {
       console.error("Failed to delete task:", err);
     }
@@ -155,6 +157,7 @@ export function TasksPage() {
       setInlineDueDate("");
       setInlinePriority("MEDIUM");
       loadTasks();
+      window.dispatchEvent(new CustomEvent("lifeos:task-updated"));
     } catch (err: any) {
       setInlineError(err.message || "Failed to create task");
     } finally {
@@ -167,8 +170,8 @@ export function TasksPage() {
       {/* Header and Quick Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white">Tasks Management</h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <h2 className="text-xl font-bold tracking-tight text-[#e6edf3]">Tasks Backlog</h2>
+          <p className="text-xs text-[#8b949e] mt-1 font-mono">
             Organize, prioritize, and track your developer assignments
           </p>
         </div>
@@ -178,25 +181,25 @@ export function TasksPage() {
             setEditingTask(null);
             setIsModalOpen(true);
           }}
-          className="shadow-sm shadow-blue-500/20 text-xs sm:text-sm self-start sm:self-auto"
+          className="text-xs self-start sm:self-auto"
         >
-          <Plus className="h-4 w-4 mr-1.5" />
-          <span>Add Detailed Task</span>
+          <Plus className="h-3.5 w-3.5 mr-1.5" />
+          <span>New Detailed Task</span>
         </Button>
       </div>
 
       {/* Quick Add Inline Form */}
-      <Card className="border-slate-800 bg-slate-900/60 shadow-sm">
-        <CardContent className="p-4 sm:p-5">
-          <form onSubmit={handleInlineSubmit} className="space-y-3">
-            <div className="flex flex-col sm:flex-row items-center gap-2.5">
+      <Card className="border-[#222736] bg-[#13161f]">
+        <CardContent className="p-3.5">
+          <form onSubmit={handleInlineSubmit} className="space-y-2.5">
+            <div className="flex flex-col sm:flex-row items-center gap-2">
               <div className="relative flex-1 w-full">
                 <input
                   type="text"
                   placeholder="⚡ Quick add new task... (e.g. Implement refresh token route)"
                   value={inlineTitle}
                   onChange={(e) => setInlineTitle(e.target.value)}
-                  className="w-full rounded-lg bg-slate-950/80 border border-slate-700/80 px-3.5 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 transition-colors"
+                  className="w-full rounded-md bg-[#161922] border border-[#222736] px-3 py-1.5 text-xs text-[#e6edf3] placeholder:text-[#57606a] focus:outline-none focus:border-blue-500 font-mono"
                 />
               </div>
 
@@ -205,11 +208,11 @@ export function TasksPage() {
                 <select
                   value={inlinePriority}
                   onChange={(e) => setInlinePriority(e.target.value as Priority)}
-                  className="rounded-lg bg-slate-950/80 border border-slate-700/80 px-3 py-2 text-xs font-medium text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/60 cursor-pointer"
+                  className="rounded-md bg-[#161922] border border-[#222736] px-2.5 py-1.5 text-xs font-mono text-[#8b949e] focus:outline-none focus:border-blue-500 cursor-pointer"
                 >
-                  <option value="LOW">Low Priority</option>
-                  <option value="MEDIUM">Medium Priority</option>
-                  <option value="HIGH">High Priority</option>
+                  <option value="LOW">LOW</option>
+                  <option value="MEDIUM">MEDIUM</option>
+                  <option value="HIGH">HIGH</option>
                 </select>
 
                 {/* Due Date Input */}
@@ -217,7 +220,7 @@ export function TasksPage() {
                   type="date"
                   value={inlineDueDate}
                   onChange={(e) => setInlineDueDate(e.target.value)}
-                  className="rounded-lg bg-slate-950/80 border border-slate-700/80 px-2.5 py-1.5 text-xs text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/60 cursor-pointer"
+                  className="rounded-md bg-[#161922] border border-[#222736] px-2.5 py-1.5 text-xs font-mono text-[#8b949e] focus:outline-none focus:border-blue-500 cursor-pointer"
                 />
 
                 <Button
@@ -225,16 +228,16 @@ export function TasksPage() {
                   size="sm"
                   isLoading={isCreatingInline}
                   disabled={!inlineTitle.trim()}
-                  className="shrink-0"
+                  className="shrink-0 text-xs"
                 >
-                  <Plus className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">Add</span>
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  <span>Add</span>
                 </Button>
               </div>
             </div>
 
             {inlineError && (
-              <p className="text-xs text-red-400 font-medium pl-1">{inlineError}</p>
+              <p className="text-xs text-[#f85149] font-mono pl-1">{inlineError}</p>
             )}
           </form>
         </CardContent>
@@ -251,47 +254,46 @@ export function TasksPage() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
         {/* Search */}
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#8b949e]" />
           <input
             type="text"
             placeholder="Search tasks..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg bg-slate-900/60 border border-slate-800 pl-9 pr-3 py-1.5 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/60 transition-colors"
+            className="w-full rounded-md bg-[#161922] border border-[#222736] pl-9 pr-3 py-1.5 text-xs text-[#e6edf3] placeholder:text-[#57606a] focus:outline-none focus:border-blue-500 font-mono"
           />
         </div>
 
         {/* Priority Filter */}
         <div className="flex items-center gap-2 w-full sm:w-auto self-end">
-          <Filter className="h-3.5 w-3.5 text-slate-500" />
-          <span className="text-xs text-slate-400">Priority:</span>
+          <Filter className="h-3 w-3 text-[#8b949e]" />
+          <span className="text-xs font-mono text-[#8b949e]">Priority:</span>
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="rounded-lg bg-slate-900 border border-slate-800 px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/60 cursor-pointer"
+            className="rounded-md bg-[#161922] border border-[#222736] px-2.5 py-1 text-xs font-mono text-[#8b949e] focus:outline-none focus:border-blue-500 cursor-pointer"
           >
-            <option value="ALL">All Priorities</option>
-            <option value="HIGH">High Priority</option>
-            <option value="MEDIUM">Medium Priority</option>
-            <option value="LOW">Low Priority</option>
+            <option value="ALL">ALL</option>
+            <option value="HIGH">HIGH</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="LOW">LOW</option>
           </select>
         </div>
       </div>
 
       {/* Tasks List */}
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         {isLoading ? (
-          <div className="py-16 text-center text-xs text-slate-500">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent mx-auto mb-3" />
+          <div className="py-16 text-center text-xs text-[#8b949e]">
             Loading tasks...
           </div>
         ) : tasks.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-950/40 p-12 text-center">
-            <Inbox className="mx-auto h-10 w-10 text-slate-600 mb-3" />
-            <h3 className="text-sm font-semibold text-slate-300">No tasks found</h3>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
+          <div className="rounded-lg border border-dashed border-[#222736] bg-[#13161f]/50 p-12 text-center">
+            <Inbox className="mx-auto h-8 w-8 text-[#57606a] mb-2.5" />
+            <h3 className="text-sm font-semibold text-[#e6edf3]">No tasks found</h3>
+            <p className="text-xs text-[#8b949e] max-w-sm mx-auto mt-1 font-mono">
               {activeFilter !== "all"
-                ? `There are currently no tasks matching the "${activeFilter}" filter.`
+                ? `No tasks matching the "${activeFilter}" filter.`
                 : searchQuery
                 ? "No tasks match your search query."
                 : "Your backlog is empty. Add your first task using the form above!"}

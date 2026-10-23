@@ -6,7 +6,7 @@ export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        "rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm text-slate-100 shadow-sm",
+        "rounded-lg border border-[#222736] bg-[#13161f] text-[#e6edf3]",
         className
       )}
       {...props}
@@ -19,7 +19,7 @@ export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex flex-col space-y-1.5 p-5 border-b border-slate-800/80", className)}
+      className={cn("flex flex-col space-y-1.5 p-4.5 border-b border-[#222736]", className)}
       {...props}
     />
   )
@@ -30,7 +30,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadi
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("font-semibold leading-none tracking-tight text-slate-100", className)}
+      className={cn("text-base font-semibold leading-none tracking-tight text-[#e6edf3]", className)}
       {...props}
     />
   )
@@ -39,14 +39,14 @@ CardTitle.displayName = "CardTitle";
 
 export const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-xs text-slate-400 mt-1", className)} {...props} />
+    <p ref={ref} className={cn("text-xs text-[#8b949e] mt-1", className)} {...props} />
   )
 );
 CardDescription.displayName = "CardDescription";
 
 export const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("p-5", className)} {...props} />
+    <div ref={ref} className={cn("p-4.5", className)} {...props} />
   )
 );
 CardContent.displayName = "CardContent";
@@ -55,7 +55,7 @@ export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex items-center p-5 pt-0 border-t border-slate-800/80 mt-5", className)}
+      className={cn("flex items-center p-4.5 pt-0 border-t border-[#222736] mt-4", className)}
       {...props}
     />
   )

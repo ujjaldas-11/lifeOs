@@ -1,5 +1,11 @@
 import type { Request, Response } from "express";
-import { registerUser, loginUser, getUserById } from "../services/auth.service.js";
+import {
+  registerUser,
+  loginUser,
+  getUserById,
+  updateUserProfile,
+  exportAllUserData,
+} from "../services/auth.service.js";
 import type { AuthenticatedRequest } from "../middleware/auth.middleware.js";
 
 export const register = async (req: Request, res: Response) => {
@@ -94,6 +100,54 @@ export const getMe = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(500).json({
       success: false,
       message: error.message || "Failed to get user profile",
+    });
+  }
+};
+
+export const updateProfile = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const { name, email, currentPassword, newPassword } = req.body;
+    const updatedUser = await updateUserProfile(userId, {
+      name,
+      email,
+      currentPassword,
+      newPassword,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: updatedUser,
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      message: error.message || "Failed to update profile",
+    });
+  }
+};
+
+export const exportData = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const backup = await exportAllUserData(userId);
+    return res.status(200).json({
+      success: true,
+      data: backup,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to export workspace data",
     });
   }
 };
